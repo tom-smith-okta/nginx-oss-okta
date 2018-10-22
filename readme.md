@@ -1,5 +1,10 @@
 # NGINX with Okta for authentication
 
+github home: https://github.com/tom-smith-okta/nginx-oss-okta
+dockerhub home: https://hub.docker.com/r/tomsmithokta/nginx-oss-okta
+
+`docker pull tomsmithokta/nginx-oss-okta`
+
 This docker image builds an NGINX reverse-proxy server that requires user authentication vs. Okta before passing a request on to a downstream application.
 
 This repo and docker image is based on the [lua-resty-openidc](https://github.com/zmartzone/lua-resty-openidc), where you can find fuller documentation.
@@ -26,7 +31,7 @@ To sign up for a free-forever Okta tenant visit [developer.okta.com](https://dev
 
 To set up your OIDC client in Okta, follow the quickstart guide [here](https://developer.okta.com/quickstart/#/okta-sign-in-page/nodejs/express) and follow the instructions for "Okta Sign-In Page Quickstart".
 
-You need to add the redirect_uri (http://localhost:8126/redirect_ur) to you OIDC client and your hostname (http://localhost:8126) to the Trusted Origins for your Okta tenant. I am just using 8126 as an example port; you can use any port you wish.
+You need to add the redirect_uri (http://localhost:8126/redirect_uri) to you OIDC client and your hostname (http://localhost:8126) to the Trusted Origins for your Okta tenant. I am just using 8126 as an example port; you can use any port you wish.
 
 Assign the OIDC app to Everyone for now, and add a user to your Okta tenant so you can test authentication.
 
