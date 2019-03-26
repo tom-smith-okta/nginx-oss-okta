@@ -1,14 +1,21 @@
-# NGINX with Okta for authentication
+# NGINX with Okta for authentication #
 
-[github home](https://github.com/tom-smith-okta/nginx-oss-okta)
+## Overview ##
 
-[dockerhub home](https://hub.docker.com/r/tomsmithokta/nginx-oss-okta)
+With the Okta + NGINX OIDC integration, NGINX can force users to authenticate vs. Okta before passing on a request to an upstream resource.
 
-This docker image builds an NGINX reverse-proxy server that requires user authentication vs. Okta before passing a request on to a downstream application.
+NGINX will look for an id token in every request, and if it does not find a valid id token, it will redirect the user to authenticate against Okta and get an id token.
 
-This repo and docker image is based on [lua-resty-openidc](https://github.com/zmartzone/lua-resty-openidc), where you can find fuller documentation.
+This github repo contains two items:
 
-Upon successful authentication, NGINX will receive an id token from Okta. NGINX will parse the id token and add some relevant user attributes as headers to the request it passes to the downstream application.
+1. An example nginx.conf file that you can use with your own NGINX server. See the instructions below for the values that you need to update, and how to get them.
+2. An example Dockerfile that builds a complete NGINX server with the nginx.conf file. See the instructions below for how to build.
+
+There is also a [pre-built docker image on dockerhub](https://hub.docker.com/r/tomsmithokta/nginx-oss-okta).
+
+This repo and docker image are built on the OIDC capabilities of [lua-resty-openidc](https://github.com/zmartzone/lua-resty-openidc), where you can find fuller documentation about the OIDC options.
+
+When a user successfully authenticates, NGINX will receive an id token from Okta. NGINX will parse the id token and add some relevant user attributes as headers to the request it passes to the downstream application.
 
 By default, this setup proxies a public web application: [http://okta-headers.herokuapp.com/](http://okta-headers.herokuapp.com/). The app just displays headers, so you can visit it now to see what it looks like without authentication and proxy by NGINX. After you authenticate with Okta, the app will display the additional headers it has parsed from the Okta id token.
 
@@ -20,6 +27,8 @@ To sign up for a free-forever Okta tenant, visit [developer.okta.com](https://de
 To set up your OIDC client in Okta, follow the quickstart guide [here](https://developer.okta.com/quickstart/#/okta-sign-in-page/nodejs/express) and follow the instructions for "Okta Sign-In Page Quickstart".
 
 You need to add the redirect_uri (http://localhost:8126/redirect_uri) to your OIDC client, and your hostname (http://localhost:8126) to the Trusted Origins for your Okta tenant. I am just using 8126 as an example port; you can use any port you wish.
+
+The hostname of the redirect_uri should be the hostname of your NGINX server.
 
 Assign the OIDC app to Everyone for now, and add a user to your Okta tenant so you can test authentication.
 
@@ -61,7 +70,7 @@ http://localhost:8126
 You will be redirected to Okta to authenticate.
 
 ### Authentication
-When you authenticate, NGINX will parse the id token it receives from Okta, create some new headers, and load the downstream site, which just displays headers.
+When you authenticate, NGINX will parse the id token it receives from Okta, create some new headers, and load the upstream site, which just displays headers.
 
 ### Handy commands
 If you want to launch the docker container in command-line mode, use this command:
